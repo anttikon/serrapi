@@ -1,7 +1,7 @@
 import fetch from 'node-fetch'
 import { uniqBy, flatten, min } from 'lodash'
 
-const flipLayouts = ['meld', 'double-faced']
+const flipLayouts = ['meld', 'double-faced', 'aftermath']
 
 const ignoredBlocks = [
   'Oversized 6x9 Promos',

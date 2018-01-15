@@ -1,8 +1,16 @@
-import fuzz from 'fuzzball'
+import leven from 'leven'
 import { uniq, uniqBy } from 'lodash'
+
+import { getCardData } from './data'
+const { cardDataLength, allCardNames } = getCardDataDetails()
 
 const replaceAll = (str, find, replace) => str.replace(new RegExp(find, 'g'), replace)
 const querify = (str) => new RegExp(`^${replaceAll(str, /\*/, '.*')}$`, 'i')
+
+function getCardDataDetails() {
+  const cardData = getCardData()
+  return { cardDataLength: cardData.length, allCardNames: uniq(cardData.map(card => card.name)) }
+}
 
 function filterByBlock(cards, blockCodes) {
   if (blockCodes.length === 0) {
@@ -12,6 +20,10 @@ function filterByBlock(cards, blockCodes) {
 }
 
 function filterByName(cardData, cardNames, fuzzy) {
+  if (cardNames.length === 0) {
+    return cardData
+  }
+
   const { cards, missedQueries } = cardNames.reduce((result, cardName) => {
     const results = cardData.filter(card => card.name.match(querify(cardName)))
     if (results.length > 0) {
@@ -29,14 +41,21 @@ export function fuzzySearch(cards, searchTerms) {
     return []
   }
 
-  const cardNames = uniq(cards.map(card => card.name))
+  const cardNames = cards.length === cardDataLength ? allCardNames : uniq(cards.map(card => card.name))
 
   return searchTerms.reduce((foundCards, query) => {
-    const fuzzySearchCardName = fuzz.extract(query, cardNames, { scorer: fuzz.ratio, wildcards: '*' })[0][0]
-    if (!fuzzySearchCardName) {
-      return foundCards
-    }
-    const results = cards.filter(card => card.name.match(new RegExp(`^${fuzzySearchCardName}$`, 'i')))
+    const match = cardNames.reduce((best, name) => {
+      const distance = leven(query, name)
+      if (!best.name && !best.distance) {
+        return { name, distance }
+      } else if (distance < best.distance) {
+        return { name, distance }
+      }
+      return best
+
+    }, { name: null, distance: null })
+
+    const results = cards.filter(card => card.name === match.name)
     return [...foundCards, ...results]
   }, [])
 }
