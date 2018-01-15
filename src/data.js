@@ -54,6 +54,6 @@ function populateMultiverseids(cards) {
 
 export function getCardData() {
   const data = JSON.parse(fs.readFileSync('./AllSets.json').toString())
-  const cards = getCards(data).filter(card => !!card.multiverseid && !rarityFilter.includes(card.rarity) && !layoutFilter.includes(card.type.toLowerCase()))
+  const cards = getCards(data).filter(card => !!card.multiverseid && !rarityFilter.includes(card.rarity) && !layoutFilter.includes(card.layout.toLowerCase()))
   return orderBy(populateMultiverseids(cards), 'multiverseid', ['desc'])
 }
