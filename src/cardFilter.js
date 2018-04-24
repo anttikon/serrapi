@@ -1,16 +1,8 @@
 import leven from 'leven'
 import { uniq, uniqBy } from 'lodash'
 
-import { getCardData } from './data'
-const { cardDataLength, allCardNames } = getCardDataDetails()
-
 const replaceAll = (str, find, replace) => str.replace(new RegExp(find, 'g'), replace)
 const querify = (str) => new RegExp(`^${replaceAll(str, /\*/, '.*')}$`, 'i')
-
-function getCardDataDetails() {
-  const cardData = getCardData()
-  return { cardDataLength: cardData.length, allCardNames: uniq(cardData.map(card => card.name)) }
-}
 
 function filterByBlock(cards, blockCodes) {
   if (blockCodes.length === 0) {
@@ -19,7 +11,7 @@ function filterByBlock(cards, blockCodes) {
   return cards.filter(card => blockCodes.find(blockCode => card.block.code.match(querify(blockCode))))
 }
 
-function filterByName(cardData, cardNames, fuzzy) {
+function filterByName(cardData, cardNames, fuzzy, filterData) {
   if (cardNames.length === 0) {
     return cardData
   }
@@ -33,14 +25,15 @@ function filterByName(cardData, cardNames, fuzzy) {
     }
   }, { cards: [], missedQueries: [] })
 
-  return fuzzy ? [...cards, ...fuzzySearch(cardData, missedQueries)] : cards
+  return fuzzy ? [...cards, ...fuzzySearch(cardData, missedQueries, filterData)] : cards
 }
 
-export function fuzzySearch(cards, searchTerms) {
+export function fuzzySearch(cards, searchTerms, filterData) {
   if (searchTerms.length === 0) {
     return []
   }
 
+  const { cardDataLength, allCardNames } = filterData
   const cardNames = cards.length === cardDataLength ? allCardNames : uniq(cards.map(card => card.name))
 
   return searchTerms.reduce((foundCards, query) => {
@@ -60,11 +53,11 @@ export function fuzzySearch(cards, searchTerms) {
   }, [])
 }
 
-export function filterCards(cardData, { cardQuery, blockQuery, fuzzy }) {
+export function filterCards(filterData, cardData, { cardQuery, blockQuery, fuzzy }) {
   if (cardQuery.length === 0 && blockQuery.length === 0) {
     return cardData
   }
   const byBlock = filterByBlock(cardData, blockQuery)
-  const byName = filterByName(byBlock, cardQuery, fuzzy)
+  const byName = filterByName(byBlock, cardQuery, fuzzy, filterData)
   return uniqBy(byName, 'multiverseid')
 }

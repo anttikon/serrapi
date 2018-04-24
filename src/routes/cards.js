@@ -18,7 +18,7 @@ export default (app, data) => {
     const fuzzy = req.query.fuzzy === 'true'
 
     try {
-      const cards = filterCards(data.cardData, { cardQuery, blockQuery, fuzzy })
+      const cards = filterCards(data.filterData, data.cardData, { cardQuery, blockQuery, fuzzy })
       return prices ? res.json(await getPrices(cards)) : res.json(cards)
     } catch (e) {
       res.send(e)

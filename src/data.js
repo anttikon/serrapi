@@ -1,13 +1,11 @@
-import fs from 'fs'
-import { orderBy } from 'lodash'
+import { orderBy, uniq } from 'lodash'
 
 const layoutFilter = ['vanguard', 'token', 'plane', 'scheme', 'phenomenon']
 const rarityFilter = ['Basic Land']
 const flipLayouts = ['meld', 'double-faced']
 const sides = ['front', 'back', 'meld']
 
-export function getBlockData() {
-  const data = JSON.parse(fs.readFileSync('./AllSets.json').toString())
+export function getBlockData(data) {
   return Object.keys(data).reduce((foundCards, key) => {
     const { name, code, releaseDate } = data[key]
     return [...foundCards, { name, code, releaseDate }]
@@ -52,8 +50,11 @@ function populateMultiverseids(cards) {
   })
 }
 
-export function getCardData() {
-  const data = JSON.parse(fs.readFileSync('./AllSets.json').toString())
+export function getCardData(data) {
   const cards = getCards(data).filter(card => !!card.multiverseid && !rarityFilter.includes(card.rarity) && !layoutFilter.includes(card.layout.toLowerCase()))
   return orderBy(populateMultiverseids(cards), 'multiverseid', ['desc'])
+}
+
+export function getCardDataDetails(cardData) {
+  return { cardDataLength: cardData.length, allCardNames: uniq(cardData.map(card => card.name)) }
 }
