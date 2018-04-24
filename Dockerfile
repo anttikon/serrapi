@@ -10,8 +10,6 @@ COPY ./src /usr/src/app/src
 RUN yarn build
 RUN yarn --production
 
-COPY AllSets.json /usr/src/app/
-
 EXPOSE 3131
 
 CMD ["yarn", "start"]
