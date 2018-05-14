@@ -11,6 +11,16 @@ function filterByBlock(cards, blockCodes) {
   return cards.filter(card => blockCodes.find(blockCode => card.block.code.match(querify(blockCode))))
 }
 
+function filterByMultiverseId(cards, multiverseIds) {
+  if (multiverseIds.length === 0) {
+    return cards
+  }
+  return cards.filter(card => multiverseIds.find(multiverseId => {
+    const intMultiverseId = parseInt(multiverseId)
+    return card.multiverseids ? card.multiverseids.includes(intMultiverseId) : card.multiverseid === intMultiverseId
+  }))
+}
+
 function filterByName(cardData, cardNames, fuzzy, filterData) {
   if (cardNames.length === 0) {
     return cardData
@@ -53,11 +63,12 @@ export function fuzzySearch(cards, searchTerms, filterData) {
   }, [])
 }
 
-export function filterCards(filterData, cardData, { cardQuery, blockQuery, fuzzy }) {
-  if (cardQuery.length === 0 && blockQuery.length === 0) {
+export function filterCards(filterData, cardData, { cardQuery, multiverseIdQuery, blockQuery, fuzzy }) {
+  if (cardQuery.length === 0 && blockQuery.length === 0 && multiverseIdQuery.length === 0) {
     return cardData
   }
-  const byBlock = filterByBlock(cardData, blockQuery)
+  const byMultiverseId = filterByMultiverseId(cardData, multiverseIdQuery)
+  const byBlock = filterByBlock(byMultiverseId, blockQuery)
   const byName = filterByName(byBlock, cardQuery, fuzzy, filterData)
   return uniqBy(byName, 'multiverseid')
 }

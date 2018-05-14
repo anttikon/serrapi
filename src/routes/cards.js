@@ -14,11 +14,12 @@ export default (app, data) => {
   app.get('/v1/cards', async (req, res) => {
     const blockQuery = parseQueryParams(req, 'b')
     const cardQuery = parseQueryParams(req, 'c')
+    const multiverseIdQuery = parseQueryParams(req, 'mid')
     const prices = req.query.prices === 'true'
     const fuzzy = req.query.fuzzy === 'true'
 
     try {
-      const cards = filterCards(data.filterData, data.cardData, { cardQuery, blockQuery, fuzzy })
+      const cards = filterCards(data.filterData, data.cardData, { cardQuery, blockQuery, multiverseIdQuery, fuzzy })
       return prices ? res.json(await getPrices(cards)) : res.json(cards)
     } catch (e) {
       res.send(e)
