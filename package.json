@@ -15,8 +15,9 @@
   "scripts": {
     "build": "NODE_ENV=production babel ./src -d build",
     "start": "NODE_ENV=production node build/app",
-    "test": "JSON_FILE=local jest",
-    "dev": "JSON_FILE=local nodemon ./src/app.js --exec babel-node"
+    "test": "npm run init-dev && JSON_FILE=local jest",
+    "dev": "npm run init-dev && JSON_FILE=local nodemon ./src/app.js --exec babel-node",
+    "init-dev": "[ -f ./AllSets.json ] || curl -O https://mtgjson.com/json/AllSets.json"
   },
   "dependencies": {
     "babel-runtime": "^6.26.0",
