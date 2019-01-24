@@ -13,8 +13,8 @@ function handleStream(readStream) {
   const data = {}
   return new Promise(resolve => {
     parser.on('data', (obj) => {
-      obj.cards = obj.cards.map(card =>  omit(card, omitCardFields))
-      data[obj.code] = omit(obj, ['tokens'])
+      obj.cards = obj.cards.map(card => omit(card, omitCardFields))
+      data[obj.code] = omit(obj, ['tokens', 'boosterV3', 'baseSetSize', 'mtgoCode', 'meta', 'tcgplayerGroupId', 'totalSetSize'])
     })
 
     parser.on('close', () => {
