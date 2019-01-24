@@ -18,7 +18,7 @@ export async function getJsonData() {
   
   const json = await getDataFunction()
   const cardData = getCardData(json)
-  const blockData = getBlockData(json)
+  const blockData = getBlockData(json, cardData)
   const filterData = getCardDataDetails(cardData)
 
   return {cardData, blockData, filterData}

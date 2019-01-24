@@ -17,7 +17,7 @@ function filterByMultiverseId(cards, multiverseIds) {
   }
   return cards.filter(card => multiverseIds.find(multiverseId => {
     const intMultiverseId = parseInt(multiverseId)
-    return card.multiverseids ? card.multiverseids.includes(intMultiverseId) : card.multiverseid === intMultiverseId
+    return card.multiverseids ? card.multiverseids.includes(intMultiverseId) : card.multiverseId === intMultiverseId
   }))
 }
 
@@ -70,5 +70,5 @@ export function filterCards(filterData, cardData, { cardQuery, multiverseIdQuery
   const byMultiverseId = filterByMultiverseId(cardData, multiverseIdQuery)
   const byBlock = filterByBlock(byMultiverseId, blockQuery)
   const byName = filterByName(byBlock, cardQuery, fuzzy, filterData)
-  return uniqBy(byName, 'multiverseid')
+  return uniqBy(byName, 'multiverseId')
 }

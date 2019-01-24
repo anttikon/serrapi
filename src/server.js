@@ -1,5 +1,6 @@
 import express from 'express'
 import cron from 'node-cron'
+import cors from 'cors'
 import { getJsonData } from './integrations/mtgjson'
 import blocksRoute from './routes/blocks'
 import cardsRoute from './routes/cards'
@@ -21,6 +22,10 @@ export async function boot() {
   })
 
   const app = express()
+
+  if (process.env.NODE_ENV !== 'production') {
+    app.use(cors())
+  }
 
   blocksRoute(app, data)
   cardsRoute(app, data)

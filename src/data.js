@@ -1,15 +1,18 @@
-import { orderBy, uniq } from 'lodash'
+import { orderBy, uniq, sortBy } from 'lodash'
 
 const layoutFilter = ['vanguard', 'token', 'plane', 'scheme', 'phenomenon']
 const rarityFilter = ['Basic Land']
 const flipLayouts = ['meld', 'double-faced']
 const sides = ['front', 'back', 'meld']
 
-export function getBlockData(data) {
-  return Object.keys(data).reduce((foundCards, key) => {
+export function getBlockData(data, cardData) {
+  const blockData = Object.keys(data).reduce((foundCards, key) => {
     const { name, code, releaseDate } = data[key]
     return [...foundCards, { name, code, releaseDate }]
   }, [])
+
+  const withoutEmptyBlocks = blockData.filter(block => cardData.find(card => card.block.code === block.code))
+  return sortBy(withoutEmptyBlocks, 'name')
 }
 
 function getCards(data) {
@@ -34,9 +37,9 @@ function getMultiverseids(cards, card) {
   const meldside = relatedCards.find(c => c.name === card.names[2])
 
   if (card.names.length === 3) {
-    return [frontside.multiverseid, backside.multiverseid, meldside.multiverseid]
+    return [frontside.multiverseId, backside.multiverseId, meldside.multiverseId]
   } else {
-    return [frontside.multiverseid, backside.multiverseid]
+    return [frontside.multiverseId, backside.multiverseId]
   }
 }
 
@@ -46,13 +49,13 @@ function populateMultiverseids(cards) {
       return card
     }
     const multiverseids = getMultiverseids(cards, card)
-    return { ...card, multiverseids, side: sides[multiverseids.indexOf(card.multiverseid)] }
+    return { ...card, multiverseids, side: sides[multiverseids.indexOf(card.multiverseId)] }
   })
 }
 
 export function getCardData(data) {
-  const cards = getCards(data).filter(card => !!card.multiverseid && !rarityFilter.includes(card.rarity) && !layoutFilter.includes(card.layout.toLowerCase()))
-  return orderBy(populateMultiverseids(cards), 'multiverseid', ['desc'])
+  const cards = getCards(data).filter(card => !!card.multiverseId && !rarityFilter.includes(card.rarity) && !layoutFilter.includes(card.layout.toLowerCase()))
+  return orderBy(populateMultiverseids(cards), 'multiverseId', ['desc'])
 }
 
 export function getCardDataDetails(cardData) {

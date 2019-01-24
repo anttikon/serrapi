@@ -59,7 +59,7 @@ describe('cards', () => {
       .expect('Content-Type', /json/)
       .expect(200)
       .then(response => {
-        expect(response.body.length).toEqual(2)
+        expect(response.body.length).toEqual(4)
         response.body.forEach(card => expect(card.name).toEqual('Emrakul, the Aeons Torn'))
       })
   })

@@ -1,15 +1,14 @@
-FROM node:8.9.4-alpine
+FROM node:8.15.0-alpine
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 COPY package.json /usr/src/app/
-RUN yarn
+RUN npm install
 
 COPY ./src /usr/src/app/src
-RUN yarn build
-RUN yarn --production
+RUN npm run build
 
 EXPOSE 3131
 
-CMD ["yarn", "start"]
+CMD ["npm", "run", "start"]
