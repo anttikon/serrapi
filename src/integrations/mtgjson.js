@@ -4,7 +4,7 @@ import { omit } from 'lodash'
 import JSONStream from 'JSONStream'
 import { getBlockData, getCardData, getCardDataDetails } from '../data'
 
-const omitCardFields = ['foreignData', 'printings', 'legalities', 'variations', 'uuid', 'tcgplayerProductId', 'tcgplayerPurchaseUrl', 'scryfallId', 'rulings', 'originalText', 'originalType', 'hasFoil', 'hasNonFoil', 'frameVersion', 'borderColor']
+const omitCardFields = ['starter', 'foreignData', 'printings', 'legalities', 'variations', 'uuid', 'tcgplayerProductId', 'tcgplayerPurchaseUrl', 'scryfallId', 'rulings', 'originalText', 'originalType', 'hasFoil', 'hasNonFoil', 'frameVersion', 'borderColor']
 const omitBlockFields = ['tokens', 'boosterV3', 'baseSetSize', 'mtgoCode', 'meta', 'tcgplayerGroupId', 'totalSetSize']
 
 function handleStream(readStream) {
