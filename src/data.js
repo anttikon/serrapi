@@ -1,7 +1,5 @@
 import { orderBy, uniq, sortBy } from 'lodash'
 
-const layoutFilter = ['vanguard', 'token', 'plane', 'scheme', 'phenomenon', 'planar']
-const typeFilter = ['Basic Land', 'Basic Land — Swamp', 'Basic Land — Mountain', 'Basic Land — Island', 'Basic Land — Plains', 'Basic Land — Forest']
 const flipLayouts = ['meld', 'double-faced', 'transform']
 const sides = ['front', 'back', 'meld']
 
@@ -54,7 +52,7 @@ function populateMultiverseids(cards) {
 }
 
 export function getCardData(data) {
-  const cards = getCards(data).filter(card => !!card.multiverseId && !typeFilter.includes(card.type) && !layoutFilter.includes(card.layout.toLowerCase()))
+  const cards = getCards(data)
   return orderBy(populateMultiverseids(cards), 'multiverseId', ['desc'])
 }
 
