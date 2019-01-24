@@ -1,16 +1,35 @@
 import fetch from 'node-fetch'
-import { readFile } from 'fs'
-import { promisify } from 'util'
+import { createReadStream } from 'fs'
+import { omit } from 'lodash'
+import JSONStream from 'JSONStream'
 import { getBlockData, getCardData, getCardDataDetails } from '../data'
 
-const readFileAsync = promisify(readFile)
+const omitCardFields = ['foreignData', 'printings', 'legalities', 'variations', 'uuid', 'tcgplayerProductId', 'tcgplayerPurchaseUrl', 'scryfallId', 'rulings']
+
+function handleStream(readStream) {
+  const parser = JSONStream.parse('*')
+  readStream.pipe(parser)
+
+  const data = {}
+  return new Promise(resolve => {
+    parser.on('data', (obj) => {
+      obj.cards = obj.cards.map(card =>  omit(card, omitCardFields))
+      data[obj.code] = omit(obj, ['tokens'])
+    })
+
+    parser.on('close', () => {
+      return resolve(data)
+    })
+  })
+}
 
 export function getMtgJson() {
-  return fetch('https://mtgjson.com/json/AllSets.json').then(response => response.json())
+  return fetch('https://mtgjson.com/json/AllSets.json').then(response => handleStream(response.body))
 }
 
 export function getLocalMtgJson() {
-  return readFileAsync(`${__dirname}/../../AllSets.json`).then(data => JSON.parse(data.toString()))
+  const readStream = createReadStream(`${__dirname}/../../AllSets.json`)
+  return handleStream(readStream)
 }
 
 export async function getJsonData() {
