@@ -24,18 +24,16 @@ function handleStream(readStream) {
 }
 
 export function getMtgJson() {
-  return fetch('https://mtgjson.com/json/AllSets.json').then(response => handleStream(response.body))
-}
-
-export function getLocalMtgJson() {
-  const readStream = createReadStream(`${__dirname}/../../AllSets.json`)
-  return handleStream(readStream)
+  if (process.env.JSON_FILE === 'local') {
+    const readStream = createReadStream(`${__dirname}/../../AllSets.json`)
+    return handleStream(readStream)
+  } else {
+    return fetch('https://mtgjson.com/json/AllSets.json').then(response => handleStream(response.body))
+  }
 }
 
 export async function getJsonData() {
-  const getDataFunction = process.env.JSON_FILE === 'local' ? getLocalMtgJson : getMtgJson
-  
-  const json = await getDataFunction()
+  const json = await getMtgJson()
   const cardData = getCardData(json)
   const blockData = getBlockData(json, cardData)
   const filterData = getCardDataDetails(cardData)
