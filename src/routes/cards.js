@@ -1,6 +1,7 @@
 import { uniqBy, uniq } from 'lodash'
 import { filterCards } from '../cardFilter'
 import { getPrices } from '../integrations/prices'
+import { getMtgJson } from '../integrations/mtgjson'
 
 export default (app, data) => {
 
@@ -10,6 +11,10 @@ export default (app, data) => {
     }
     return Array.isArray(req.query[param]) ? req.query[param] : [req.query[param]]
   }
+
+  app.get('/v1/json', async (req, res) => {
+    res.json(await getMtgJson())
+  })
 
   app.get('/v1/cards', async (req, res) => {
     const blockQuery = parseQueryParams(req, 'b')
