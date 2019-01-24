@@ -34,10 +34,10 @@ export function getMtgJson() {
 }
 
 export async function getJsonData() {
-  const json = await getMtgJson()
-  const cardData = getCardData(json)
-  const blockData = getBlockData(json, cardData)
+  const mtgjson = await getMtgJson()
+  const cardData = getCardData(mtgjson)
+  const blockData = getBlockData(mtgjson, cardData)
   const filterData = getCardDataDetails(cardData)
 
-  return {cardData, blockData, filterData}
+  return {mtgjson, cardData, blockData, filterData}
 }

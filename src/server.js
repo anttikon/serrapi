@@ -9,6 +9,7 @@ import cardsRoute from './routes/cards'
 export async function boot() {
   const initialData = await getJsonData()
   const data = {
+    mtgjson: initialData.mtgjson,
     cardData: initialData.cardData,
     blockData: initialData.blockData,
     filterData: initialData.filterData
@@ -17,6 +18,7 @@ export async function boot() {
   cron.schedule('0 4 * * *', async () => {
     console.log('Reloading data')
     const reloadedData = await getJsonData()
+    data.mtgjson = reloadedData.mtgjson
     data.cardData = reloadedData.cardData
     data.blockData = reloadedData.blockData
     data.filterData = reloadedData.filterData

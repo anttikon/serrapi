@@ -1,7 +1,6 @@
 import { uniqBy, uniq } from 'lodash'
 import { filterCards } from '../cardFilter'
 import { getPrices } from '../integrations/prices'
-import { getMtgJson } from '../integrations/mtgjson'
 
 export default (app, data) => {
 
@@ -13,7 +12,7 @@ export default (app, data) => {
   }
 
   app.get('/v1/json', async (req, res) => {
-    res.json(await getMtgJson())
+    res.json(data.mtgjson)
   })
 
   app.get('/v1/cards', async (req, res) => {
