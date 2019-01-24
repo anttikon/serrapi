@@ -1,4 +1,5 @@
 import express from 'express'
+import compression from 'compression'
 import cron from 'node-cron'
 import cors from 'cors'
 import { getJsonData } from './integrations/mtgjson'
@@ -22,6 +23,7 @@ export async function boot() {
   })
 
   const app = express()
+  app.use(compression())
 
   if (process.env.NODE_ENV !== 'production') {
     app.use(cors())
