@@ -4,7 +4,8 @@ import { omit } from 'lodash'
 import JSONStream from 'JSONStream'
 import { getBlockData, getCardData, getCardDataDetails } from '../data'
 
-const omitCardFields = ['foreignData', 'printings', 'legalities', 'variations', 'uuid', 'tcgplayerProductId', 'tcgplayerPurchaseUrl', 'scryfallId', 'rulings']
+const omitCardFields = ['foreignData', 'printings', 'legalities', 'variations', 'uuid', 'tcgplayerProductId', 'tcgplayerPurchaseUrl', 'scryfallId', 'rulings', 'originalText', 'originalType', 'hasFoil', 'hasNonFoil', 'frameVersion', 'borderColor']
+const omitBlockFields = ['tokens', 'boosterV3', 'baseSetSize', 'mtgoCode', 'meta', 'tcgplayerGroupId', 'totalSetSize']
 
 function handleStream(readStream) {
   const parser = JSONStream.parse('*')
@@ -14,7 +15,7 @@ function handleStream(readStream) {
   return new Promise(resolve => {
     parser.on('data', (obj) => {
       obj.cards = obj.cards.map(card => omit(card, omitCardFields))
-      data[obj.code] = omit(obj, ['tokens', 'boosterV3', 'baseSetSize', 'mtgoCode', 'meta', 'tcgplayerGroupId', 'totalSetSize'])
+      data[obj.code] = omit(obj, omitBlockFields)
     })
 
     parser.on('close', () => {
