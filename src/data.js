@@ -1,6 +1,6 @@
 import { orderBy, uniq, sortBy } from 'lodash'
 
-const layoutFilter = ['vanguard', 'token', 'plane', 'scheme', 'phenomenon']
+const layoutFilter = ['vanguard', 'token', 'plane', 'scheme', 'phenomenon', 'planar']
 const typeFilter = ['Basic Land', 'Basic Land — Swamp', 'Basic Land — Mountain', 'Basic Land — Island', 'Basic Land — Plains', 'Basic Land — Forest']
 const flipLayouts = ['meld', 'double-faced', 'transform']
 const sides = ['front', 'back', 'meld']
