@@ -3,6 +3,7 @@ import { boot } from '../../server'
 
 describe('cards', () => {
 
+  jest.setTimeout(10000)
   let app
   beforeAll(async () => {
     app = await boot()
